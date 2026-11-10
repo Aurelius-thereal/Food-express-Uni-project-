@@ -1,0 +1,127 @@
+<div class="shell">
+  <div class="section-head" style="margin-top: 0">
+    <div>
+      <h1 class="page-title">Checkout</h1>
+      <p class="page-sub">Review your cart, then tell us where to deliver it.</p>
+    </div>
+    <a class="btn btn--ghost btn--sm" href="#/orders" ng-if="false">My orders</a>
+  </div>
+
+  <div class="empty" ng-if="vm.isEmpty()">
+    <div class="empty__emoji">🛒</div>
+    <p class="empty__title">Your cart is empty</p>
+    <p class="empty__text">Pick a restaurant and add a few dishes — your cart is saved automatically, even if you refresh.</p>
+    <a class="btn btn--primary" href="#/">Browse restaurants</a>
+  </div>
+
+  <div class="checkout__grid" ng-if="!vm.isEmpty()">
+    <div>
+      <section class="panel">
+        <div class="panel__head">
+          <h2 class="panel__title">Your order</h2>
+          <span class="badge badge--soft">{{ vm.items.length }} item{{ vm.items.length === 1 ? '' : 's' }}</span>
+        </div>
+
+        <div class="cart-line" ng-repeat="item in vm.items track by item.itemId">
+          <span class="cart-line__emoji cover--{{ item.restaurantTheme }}">{{ item.restaurantEmoji }}</span>
+          <div class="cart-line__main">
+            <p class="cart-line__name">{{ item.name }}</p>
+            <p class="cart-line__meta">
+              <span class="veg-mark" ng-class="{ 'veg-mark--nonveg': !item.isVeg }"></span>
+              {{ item.price | money }} each
+            </p>
+            <button type="button" class="cart-line__remove" ng-click="vm.remove(item)">Remove</button>
+          </div>
+          <div class="cart-line__controls">
+            <div class="stepper">
+              <button type="button" class="stepper__btn" ng-click="vm.changeQty(item, -1)" aria-label="Decrease quantity">−</button>
+              <span class="stepper__qty">{{ item.qty }}</span>
+              <button type="button" class="stepper__btn" ng-click="vm.changeQty(item, 1)" aria-label="Increase quantity">+</button>
+            </div>
+            <span class="cart-line__price">{{ (item.price * item.qty) | money }}</span>
+          </div>
+        </div>
+
+        <div class="panel__head" style="margin: 12px 0 0">
+          <a class="btn btn--outline btn--sm" href="#/restaurant/{{ vm.items[0].restaurantId }}">＋ Add more items</a>
+          <button type="button" class="btn btn--ghost btn--sm" ng-click="vm.clearCart()">Empty cart</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2 class="panel__title">Delivery details</h2>
+        <p class="panel__hint" style="font-size: 12.5px; color: var(--muted); margin: 4px 0 16px">
+          We deliver to this address and call this number if we need to reach you.
+        </p>
+
+        <div class="address-card" ng-if="vm.savedAddress">
+          <span>🏠</span>
+          <span><strong>Saved address:</strong> {{ vm.savedAddress }}</span>
+        </div>
+        <button type="button" class="btn btn--ghost btn--sm" style="margin-bottom: 14px"
+                ng-if="vm.savedAddress" ng-click="vm.useSavedAddress()">Use my saved address</button>
+
+        <form ng-submit="vm.placeOrder()" novalidate>
+          <div class="field">
+            <label class="field__label" for="address">Delivery address</label>
+            <textarea id="address" class="textarea" ng-model="vm.form.address"
+                      placeholder="Flat / house number, street, area, city and PIN code"></textarea>
+            <span class="field__hint">Include a flat number, street and city so the rider finds you quickly.</span>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="phone">Phone number</label>
+            <input id="phone" class="input" type="tel" ng-model="vm.form.phone" placeholder="10-digit mobile number">
+          </div>
+
+          <h3 class="panel__title" style="margin-bottom: 10px">Payment method</h3>
+          <div class="pay-options">
+            <button type="button" class="pay" ng-repeat="payment in vm.payments"
+                    ng-class="{ 'pay--active': vm.form.paymentMethod === payment.value }"
+                    ng-click="vm.pickPayment(payment.value)">
+              <span class="pay__label">{{ payment.icon }} {{ payment.label }}</span>
+              <span class="pay__desc">{{ payment.desc }}</span>
+            </button>
+          </div>
+        </form>
+      </section>
+    </div>
+
+    <aside class="checkout__side">
+      <div class="panel">
+        <h2 class="panel__title">Bill summary</h2>
+        <div class="summary__row" style="margin-top: 10px">
+          <span>Item total</span><span>{{ vm.totals().subtotal | money }}</span>
+        </div>
+        <div class="summary__row">
+          <span>GST ({{ vm.totals().gstPercent }}%)</span><span>{{ vm.totals().gst | money }}</span>
+        </div>
+        <div class="summary__row">
+          <span>Delivery fee</span>
+          <span>{{ vm.totals().deliveryFee === 0 ? 'Free' : (vm.totals().deliveryFee | money) }}</span>
+        </div>
+        <div class="summary__row summary__row--total">
+          <span>To pay</span><span>{{ vm.totals().total | money }}</span>
+        </div>
+
+        <div class="summary__note" ng-if="vm.totals().freeDeliveryGap > 0">
+          🚚 Add {{ vm.totals().freeDeliveryGap | money }} more for free delivery
+        </div>
+        <div class="summary__note" ng-if="vm.totals().freeDeliveryGap === 0">🎉 Free delivery unlocked</div>
+
+        <div class="alert alert--error" style="margin-top: 14px" ng-if="vm.error">
+          <span class="alert__icon">!</span><span>{{ vm.error }}</span>
+        </div>
+
+        <div class="summary__foot">
+          <button type="button" class="btn btn--primary btn--block btn--lg" ng-click="vm.placeOrder()"
+                  ng-disabled="vm.placing">
+            <span class="spinner" ng-if="vm.placing" style="border-color: rgba(255,255,255,.45); border-top-color: #fff"></span>
+            {{ vm.placing ? 'Placing your order…' : 'Place order · ' + (vm.totals().total | money) }}
+          </button>
+          <p class="summary__hint">Paying by {{ vm.form.paymentMethod }} · you can cancel until the kitchen starts preparing</p>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>

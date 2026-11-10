@@ -1,0 +1,69 @@
+<div class="shell">
+  <div class="section-head" style="margin-top: 0">
+    <div>
+      <h1 class="page-title">Profile</h1>
+      <p class="page-sub">Keep your contact details and delivery address up to date.</p>
+    </div>
+  </div>
+
+  <div class="profile-grid">
+    <section class="panel">
+      <h2 class="panel__title">Account details</h2>
+      <p class="page-sub" style="margin: 4px 0 18px">Your saved address is filled in automatically at checkout.</p>
+
+      <form ng-submit="vm.save()" novalidate>
+        <div class="form-grid form-grid--2">
+          <div class="field">
+            <label class="field__label" for="profile-name">Full name</label>
+            <input id="profile-name" class="input" type="text" ng-model="vm.form.name">
+          </div>
+          <div class="field">
+            <label class="field__label" for="profile-email">Email address</label>
+            <input id="profile-email" class="input" type="email" ng-model="vm.user.email" disabled>
+            <span class="field__hint">Your email is used to sign in and cannot be changed here.</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="profile-phone">Phone number</label>
+          <input id="profile-phone" class="input" type="tel" ng-model="vm.form.phone" placeholder="9876543210">
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="profile-address">Saved delivery address</label>
+          <textarea id="profile-address" class="textarea" ng-model="vm.form.address"
+                    placeholder="Flat / house number, street, area, city and PIN code"></textarea>
+        </div>
+
+        <button class="btn btn--primary" type="submit" ng-disabled="vm.saving">
+          {{ vm.saving ? 'Saving…' : 'Save changes' }}
+        </button>
+      </form>
+    </section>
+
+    <aside>
+      <div class="profile-card">
+        <span class="avatar">{{ vm.user.name.charAt(0).toUpperCase() }}</span>
+        <div>
+          <p class="profile-card__name">{{ vm.user.name }}</p>
+          <p class="profile-card__email">{{ vm.user.email }}</p>
+          <span class="badge badge--soft" style="margin-top: 6px">
+            {{ vm.user.role === 'admin' ? 'Administrator' : 'Customer' }}
+          </span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2 class="panel__title">Account summary</h2>
+        <div class="kv"><span>Role</span><span>{{ vm.user.role === 'admin' ? 'Administrator' : 'Customer' }}</span></div>
+        <div class="kv"><span>Phone</span><span>{{ vm.form.phone || 'Not added' }}</span></div>
+        <div class="kv"><span>Address</span><span>{{ vm.form.address || 'Not added' }}</span></div>
+        <div style="margin-top: 16px; display: flex; gap: 8px; flex-wrap: wrap">
+          <a class="btn btn--outline btn--sm" href="#/orders" ng-if="vm.user.role !== 'admin'">My orders</a>
+          <a class="btn btn--outline btn--sm" href="#/admin" ng-if="vm.user.role === 'admin'">Admin dashboard</a>
+          <a class="btn btn--ghost btn--sm" href="#/">Browse restaurants</a>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>

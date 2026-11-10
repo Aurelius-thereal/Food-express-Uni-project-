@@ -1,0 +1,129 @@
+<div class="shell">
+  <section class="hero">
+    <div class="hero__grid">
+      <div class="hero__copy">
+        <span class="eyebrow">🛵 Free delivery on orders over ₹499</span>
+        <h1 class="hero__title">Hungry? Great food is <em>minutes away</em>.</h1>
+        <p class="hero__lead">
+          Browse kitchens near you, build your cart and track every step from the pan to your door.
+          Prices include GST, and you can pay by cash, card or UPI.
+        </p>
+
+        <form class="search" ng-submit="vm.searchNow()">
+          <span class="search__icon">🔍</span>
+          <input class="search__input" type="search" ng-model="vm.filters.search" ng-change="vm.search()"
+                 placeholder="Search restaurants, cuisines or cities" aria-label="Search restaurants">
+          <button class="btn btn--primary" type="submit">Search</button>
+        </form>
+
+        <div class="hero__points">
+          <span class="hero__point">✅ Verified kitchens</span>
+          <span class="hero__point">🧾 GST included</span>
+          <span class="hero__point">📍 Live order tracking</span>
+        </div>
+      </div>
+
+      <div class="hero__art" aria-hidden="true">
+        <div class="hero__art-card">
+          <div class="hero__art-emoji">🍛</div>
+          <p class="hero__art-title">Today's pick</p>
+          <p class="hero__art-sub">Butter Chicken · Spice Route</p>
+          <div class="hero__art-row">
+            <div class="float-tag">Delivery<strong>30 min</strong></div>
+            <div class="float-tag">Rating<strong>4.5 ★</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="filters" aria-label="Restaurant filters">
+    <div class="filters__top">
+      <div class="chips">
+        <button type="button" class="chip" ng-class="{ 'chip--active': !vm.filters.cuisine }"
+                ng-click="vm.filters.cuisine = ''; vm.searchNow()">All cuisines</button>
+        <button type="button" class="chip" ng-repeat="cuisine in vm.cuisines"
+                ng-class="{ 'chip--active': vm.filters.cuisine === cuisine }"
+                ng-click="vm.pickCuisine(cuisine)">{{ cuisine }}</button>
+      </div>
+
+      <div class="filters__row">
+        <select class="select" ng-model="vm.filters.city" ng-change="vm.searchNow()" aria-label="Filter by city">
+          <option value="">All cities</option>
+          <option ng-repeat="city in vm.cities" value="{{ city }}">{{ city }}</option>
+        </select>
+        <div class="sort">
+          <label for="sortBy">Sort</label>
+          <select id="sortBy" class="select" ng-model="vm.filters.sort">
+            <option value="recommended">Recommended</option>
+            <option value="rating">Top rated</option>
+            <option value="delivery">Fastest delivery</option>
+            <option value="price-low">Price: low to high</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-head">
+    <div>
+      <h2 class="section-head__title">{{ vm.hasFilters() ? 'Search results' : 'Popular near you' }}</h2>
+      <p class="section-head__sub">
+        {{ vm.sorted().length }} restaurant{{ vm.sorted().length === 1 ? '' : 's' }} available
+        · delivery fee ₹29, free above ₹499
+      </p>
+    </div>
+    <button type="button" class="btn btn--ghost btn--sm" ng-show="vm.hasFilters()" ng-click="vm.clearFilters()">
+      Clear filters
+    </button>
+  </div>
+
+  <div class="alert alert--error" ng-if="vm.error">
+    <span class="alert__icon">!</span><span>{{ vm.error }}</span>
+  </div>
+
+  <div class="grid grid--cards" ng-if="vm.loading">
+    <div class="skeleton skeleton--card" ng-repeat="n in [1,2,3,4,5,6]"></div>
+  </div>
+
+  <div class="empty" ng-if="!vm.loading && !vm.error && !vm.sorted().length">
+    <div class="empty__emoji">🍽️</div>
+    <p class="empty__title">No restaurants match that search</p>
+    <p class="empty__text">Try a different cuisine, city or keyword — or clear the filters to see everything on the menu.</p>
+    <button type="button" class="btn btn--primary" ng-click="vm.clearFilters()">Show all restaurants</button>
+  </div>
+
+  <div class="grid grid--cards" ng-if="!vm.loading && vm.sorted().length">
+    <a class="rcard" ng-repeat="restaurant in vm.sorted() track by restaurant._id"
+       ng-href="#/restaurant/{{ restaurant._id }}">
+      <div class="rcard__cover cover--{{ restaurant.theme }}"
+           ng-class="{ 'rcard__cover--photo': restaurant.image }">
+        <span class="rcard__emoji" ng-if="!restaurant.image">{{ restaurant.emoji }}</span>
+        <img ng-if="restaurant.image" ng-src="{{ restaurant.image }}" loading="lazy"
+             alt="{{ restaurant.name }} — {{ restaurant.cuisine }}"
+             onerror="this.style.display='none'">
+        <span class="rcard__rating">★ <span>{{ restaurant.rating }}</span></span>
+        <span class="rcard__closed" ng-if="!restaurant.isOpen">Currently closed</span>
+      </div>
+
+      <div class="rcard__body">
+        <div class="rcard__top">
+          <div>
+            <p class="rcard__name">{{ restaurant.name }}</p>
+            <p class="rcard__meta">{{ restaurant.cuisine }} · {{ restaurant.area }}, {{ restaurant.city }}</p>
+          </div>
+        </div>
+
+        <div class="rcard__tags" ng-if="restaurant.tags.length">
+          <span class="rcard__tag" ng-repeat="tag in restaurant.tags | limitTo:3">{{ tag }}</span>
+        </div>
+
+        <div class="rcard__foot">
+          <span class="rcard__stat">🛵 {{ restaurant.deliveryTime }}</span>
+          <span class="rcard__stat">₹{{ restaurant.priceForTwo }} <span>for two</span></span>
+          <span class="rcard__go">View menu →</span>
+        </div>
+      </div>
+    </a>
+  </div>
+</div>

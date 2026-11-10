@@ -1,0 +1,566 @@
+<div class="shell">
+  <div class="admin__head">
+    <div>
+      <h1 class="admin__title">Admin dashboard</h1>
+      <p class="admin__sub">Manage restaurants, menus, orders and customer accounts for FoodExpress.</p>
+    </div>
+    <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap">
+      <span class="badge badge--green" ng-if="vm.stats">{{ vm.stats.activeOrders }} active order{{ vm.stats.activeOrders === 1 ? '' : 's' }}</span>
+      <button type="button" class="btn btn--outline btn--sm" ng-click="vm.refresh()">↻ Refresh</button>
+      <a class="btn btn--ghost btn--sm" href="#/">View storefront</a>
+    </div>
+  </div>
+
+  <div class="admin-shell">
+    <aside class="admin-side" aria-label="Admin sections">
+      <button type="button" class="admin-side__link" ng-class="{ 'admin-side__link--active': vm.tab === 'dashboard' }"
+              ng-click="vm.setTab('dashboard')"><span class="admin-side__icon">📊</span> Overview</button>
+      <button type="button" class="admin-side__link" ng-class="{ 'admin-side__link--active': vm.tab === 'restaurants' }"
+              ng-click="vm.setTab('restaurants')"><span class="admin-side__icon">🏪</span> Restaurants</button>
+      <button type="button" class="admin-side__link" ng-class="{ 'admin-side__link--active': vm.tab === 'items' }"
+              ng-click="vm.setTab('items')"><span class="admin-side__icon">🍽️</span> Menu items</button>
+      <button type="button" class="admin-side__link" ng-class="{ 'admin-side__link--active': vm.tab === 'orders' }"
+              ng-click="vm.setTab('orders')"><span class="admin-side__icon">🧾</span> Orders</button>
+      <button type="button" class="admin-side__link" ng-class="{ 'admin-side__link--active': vm.tab === 'users' }"
+              ng-click="vm.setTab('users')"><span class="admin-side__icon">👥</span> Customers</button>
+      <div class="admin-side__sep"></div>
+      <a class="admin-side__link" href="#/profile"><span class="admin-side__icon">⚙️</span> My profile</a>
+    </aside>
+
+    <div class="admin-main">
+      <div class="alert alert--error" ng-if="vm.error" style="margin-bottom: 16px">
+        <span class="alert__icon">!</span><span>{{ vm.error }}</span>
+      </div>
+
+      <!-- ============================================== OVERVIEW -->
+      <section ng-if="vm.tab === 'dashboard'">
+        <div class="loading-row" ng-if="vm.loading"><span class="spinner"></span> Loading dashboard…</div>
+
+        <div ng-if="vm.stats && !vm.loading">
+          <div class="stat-grid">
+            <div class="stat stat--brand">
+              <p class="stat__label">Revenue</p>
+              <p class="stat__value">{{ vm.stats.revenue | money }}</p>
+              <p class="stat__hint">{{ vm.stats.averageOrderValue | money }} average order</p>
+            </div>
+            <div class="stat">
+              <p class="stat__label">Total orders</p>
+              <p class="stat__value">{{ vm.stats.totalOrders }}</p>
+              <p class="stat__hint">{{ vm.stats.todayOrders }} placed today</p>
+            </div>
+            <div class="stat">
+              <p class="stat__label">Active deliveries</p>
+              <p class="stat__value">{{ vm.stats.activeOrders }}</p>
+              <p class="stat__hint">{{ vm.stats.deliveredOrders }} delivered so far</p>
+            </div>
+            <div class="stat">
+              <p class="stat__label">Customers</p>
+              <p class="stat__value">{{ vm.stats.customers }}</p>
+              <p class="stat__hint">{{ vm.stats.cancelledOrders }} cancelled orders</p>
+            </div>
+          </div>
+
+          <div class="admin-cols">
+            <section class="panel">
+              <div class="panel__head">
+                <h2 class="panel__title">Orders by status</h2>
+                <span class="badge badge--soft">{{ vm.stats.totalOrders }} total</span>
+              </div>
+              <div class="bars">
+                <div ng-repeat="status in vm.statuses">
+                  <div class="bar__top">
+                    <span>{{ status }}</span>
+                    <span>{{ vm.stats.byStatus[status] || 0 }}</span>
+                  </div>
+                  <div class="bar__track">
+                    <div class="bar__fill" ng-style="{ width: vm.barWidth(vm.stats.byStatus[status] || 0) + '%' }"></div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel__head">
+                <h2 class="panel__title">Top restaurants</h2>
+                <span class="badge badge--soft">By revenue</span>
+              </div>
+              <div class="bars" ng-if="vm.stats.topRestaurants.length">
+                <div ng-repeat="restaurant in vm.stats.topRestaurants">
+                  <div class="bar__top">
+                    <span>{{ restaurant.emoji }} {{ restaurant.name }}</span>
+                    <span>{{ restaurant.revenue | money }} · {{ restaurant.orders }} orders</span>
+                  </div>
+                  <div class="bar__track">
+                    <div class="bar__fill" ng-style="{ width: vm.topRestaurantWidth(restaurant.revenue) + '%' }"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="cart-empty" ng-if="!vm.stats.topRestaurants.length">
+                <div class="cart-empty__emoji">📈</div>
+                <p class="cart-empty__text">Revenue will appear here once orders start coming in.</p>
+              </div>
+            </section>
+          </div>
+
+          <section class="panel">
+            <div class="panel__head">
+              <h2 class="panel__title">Recent orders</h2>
+              <button type="button" class="btn btn--ghost btn--sm" ng-click="vm.setTab('orders')">Manage orders →</button>
+            </div>
+            <div class="table-scroll">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Order</th>
+                    <th>Restaurant</th>
+                    <th>Customer</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Placed</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="order in vm.stats.recentOrders">
+                    <td class="table__name">{{ order.orderNumber }}</td>
+                    <td>{{ order.restaurantName }}</td>
+                    <td>{{ order.customerName }}</td>
+                    <td>{{ order.total | money }}</td>
+                    <td><span class="badge" ng-class="vm.statusBadge(order.status)">{{ order.status }}</span></td>
+                    <td>{{ order.createdAt | timeAgo }}</td>
+                  </tr>
+                  <tr class="table--empty" ng-if="!vm.stats.recentOrders.length">
+                    <td colspan="6">No orders have been placed yet.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <!-- =========================================== RESTAURANTS -->
+      <section ng-if="vm.tab === 'restaurants'">
+        <div class="toolbar">
+          <div class="toolbar__group">
+            <span class="badge badge--soft">{{ vm.restaurants.length }} restaurants</span>
+          </div>
+          <button type="button" class="btn btn--primary btn--sm" ng-click="vm.openRestaurant(null)">＋ Add restaurant</button>
+        </div>
+
+        <div class="loading-row" ng-if="vm.loading"><span class="spinner"></span> Loading restaurants…</div>
+
+        <div class="table-wrap" ng-if="!vm.loading">
+          <div class="table-scroll">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Restaurant</th>
+                  <th>Cuisine</th>
+                  <th>Delivery</th>
+                  <th>Rating</th>
+                  <th>Menu</th>
+                  <th>Status</th>
+                  <th style="text-align: right">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="restaurant in vm.restaurants track by restaurant._id">
+                  <td>
+                    <div class="mini-name">
+                      <span class="mini-cover cover--{{ restaurant.theme }}">
+                        <img ng-if="restaurant.image" ng-src="{{ restaurant.image }}" alt="">
+                        <span ng-if="!restaurant.image">{{ restaurant.emoji }}</span>
+                      </span>
+                      <div>
+                        <p class="table__name">{{ restaurant.name }}</p>
+                        <p class="table__sub">{{ restaurant.area }}, {{ restaurant.city }}</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td>{{ restaurant.cuisine }}</td>
+                  <td>{{ restaurant.deliveryTime }}</td>
+                  <td>★ {{ restaurant.rating }}</td>
+                  <td>{{ vm.itemCountFor(restaurant._id) }} items</td>
+                  <td>
+                    <span class="pill" ng-class="restaurant.isOpen ? 'pill--open' : 'pill--closed'">
+                      {{ restaurant.isOpen ? 'Open' : 'Closed' }}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="table__actions">
+                      <button type="button" class="btn btn--outline btn--sm" ng-click="vm.openRestaurant(restaurant)">Edit</button>
+                      <button type="button" class="btn btn--ghost btn--sm" ng-click="vm.deleteRestaurant(restaurant)">Delete</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="table--empty" ng-if="!vm.restaurants.length">
+                  <td colspan="7">No restaurants yet — add your first one.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================ ITEMS -->
+      <section ng-if="vm.tab === 'items'">
+        <div class="toolbar">
+          <div class="toolbar__group">
+            <select class="select" ng-model="vm.itemRestaurantId" aria-label="Filter by restaurant">
+              <option value="">All restaurants</option>
+              <option ng-repeat="restaurant in vm.restaurants" value="{{ restaurant._id }}">{{ restaurant.name }}</option>
+            </select>
+            <span class="badge badge--soft">{{ vm.filteredItems().length }} items</span>
+          </div>
+          <button type="button" class="btn btn--primary btn--sm" ng-click="vm.openItem(null)">＋ Add menu item</button>
+        </div>
+
+        <div class="loading-row" ng-if="vm.loading"><span class="spinner"></span> Loading menu items…</div>
+
+        <div class="table-wrap" ng-if="!vm.loading">
+          <div class="table-scroll">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Restaurant</th>
+                  <th>Category</th>
+                  <th>Price</th>
+                  <th>Tags</th>
+                  <th>Status</th>
+                  <th style="text-align: right">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="item in vm.filteredItems() track by item._id">
+                  <td>
+                    <div class="mini-name">
+                      <span class="veg-mark" ng-class="{ 'veg-mark--nonveg': !item.isVeg }"></span>
+                      <div>
+                        <p class="table__name">{{ item.name }}</p>
+                        <p class="table__sub">{{ item.description | limitTo:60 }}{{ item.description.length > 60 ? '…' : '' }}</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td>{{ vm.restaurantName(item.restaurantId) }}</td>
+                  <td>{{ item.category }}</td>
+                  <td>{{ item.price | money }}</td>
+                  <td>
+                    <span class="badge badge--amber" ng-if="item.isBestseller">Bestseller</span>
+                    <span class="badge badge--green" ng-if="item.isVeg">Veg</span>
+                    <span class="badge badge--red" ng-if="!item.isVeg">Non-veg</span>
+                  </td>
+                  <td>
+                    <span class="pill" ng-class="item.isAvailable ? 'pill--open' : 'pill--closed'">
+                      {{ item.isAvailable ? 'Available' : 'Sold out' }}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="table__actions">
+                      <button type="button" class="btn btn--outline btn--sm" ng-click="vm.openItem(item)">Edit</button>
+                      <button type="button" class="btn btn--ghost btn--sm" ng-click="vm.deleteItem(item)">Delete</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="table--empty" ng-if="!vm.filteredItems().length">
+                  <td colspan="7">No menu items for this restaurant yet.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- =============================================== ORDERS -->
+      <section ng-if="vm.tab === 'orders'">
+        <div class="toolbar">
+          <div class="toolbar__group">
+            <input class="input" type="search" ng-model="vm.orderSearch" ng-change="vm.onOrderSearch()"
+                   placeholder="Search order, dish or customer">
+            <select class="select" ng-model="vm.orderStatusFilter" aria-label="Filter orders by status">
+              <option value="All">All statuses</option>
+              <option ng-repeat="status in vm.statuses" value="{{ status }}">{{ status }}</option>
+            </select>
+          </div>
+          <span class="badge badge--soft">{{ vm.filteredOrders().length }} orders shown</span>
+        </div>
+
+        <div class="loading-row" ng-if="vm.loading"><span class="spinner"></span> Loading orders…</div>
+
+        <div class="table-wrap" ng-if="!vm.loading">
+          <div class="table-scroll">
+            <table class="table" style="min-width: 880px">
+              <thead>
+                <tr>
+                  <th>Order</th>
+                  <th>Customer</th>
+                  <th>Restaurant</th>
+                  <th>Items</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                  <th>Update</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="order in vm.filteredOrders() track by order._id">
+                  <td>
+                    <p class="table__name">{{ order.orderNumber }}</p>
+                    <p class="table__sub">{{ order.createdAt | timeAgo }}</p>
+                  </td>
+                  <td>
+                    <p class="table__name">{{ order.customer ? order.customer.name : 'Deleted user' }}</p>
+                    <p class="table__sub">{{ order.customer ? order.customer.email : '' }}</p>
+                  </td>
+                  <td>{{ order.restaurantName }}</td>
+                  <td>
+                    <p class="table__sub" style="margin: 0">
+                      {{ order.items.length }} item{{ order.items.length === 1 ? '' : 's' }} · {{ order.paymentMethod }}
+                    </p>
+                  </td>
+                  <td class="table__name">{{ order.total | money }}</td>
+                  <td>
+                    <span class="badge" ng-class="vm.statusBadge(order.status)">{{ order.status }}</span>
+                  </td>
+                  <td>
+                    <select class="select" ng-model="vm.statusDraft[order._id]"
+                            ng-change="vm.setStatus(order, vm.statusDraft[order._id])"
+                            ng-disabled="order.status === 'Delivered' || order.status === 'Cancelled'"
+                            aria-label="Update order status">
+                      <option ng-repeat="status in vm.statuses" value="{{ status }}">{{ status }}</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr class="table--empty" ng-if="!vm.filteredOrders().length">
+                  <td colspan="7">No orders match these filters.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================ USERS -->
+      <section ng-if="vm.tab === 'users'">
+        <div class="toolbar">
+          <div class="toolbar__group">
+            <span class="badge badge--soft">{{ vm.users.length }} accounts</span>
+          </div>
+        </div>
+
+        <div class="loading-row" ng-if="vm.loading"><span class="spinner"></span> Loading customers…</div>
+
+        <div class="table-wrap" ng-if="!vm.loading">
+          <div class="table-scroll">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Customer</th>
+                  <th>Role</th>
+                  <th>Orders</th>
+                  <th>Lifetime spend</th>
+                  <th>Joined</th>
+                  <th style="text-align: right">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="user in vm.users track by user._id">
+                  <td>
+                    <div class="mini-name">
+                      <span class="avatar">{{ user.name.charAt(0).toUpperCase() }}</span>
+                      <div>
+                        <p class="table__name">{{ user.name }}</p>
+                        <p class="table__sub">{{ user.email }}</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge" ng-class="user.role === 'admin' ? 'badge--soft' : 'badge--green'">
+                      {{ user.role === 'admin' ? 'Administrator' : 'Customer' }}
+                    </span>
+                  </td>
+                  <td>{{ user.orderCount }}</td>
+                  <td>{{ user.spend | money }}</td>
+                  <td>{{ user.createdAt | timeAgo }}</td>
+                  <td>
+                    <div class="table__actions">
+                      <button type="button" class="btn btn--ghost btn--sm" ng-if="user.role !== 'admin'"
+                              ng-click="vm.deleteUser(user)">Delete</button>
+                      <span class="table__sub" ng-if="user.role === 'admin'">Protected</span>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="table--empty" ng-if="!vm.users.length">
+                  <td colspan="6">No accounts found.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ RESTAURANT MODAL -->
+<div class="modal" ng-if="vm.restaurantModal" ng-click="vm.closeRestaurant()">
+  <div class="modal__panel" ng-click="$event.stopPropagation()">
+    <div class="modal__head">
+      <h2 class="modal__title">{{ vm.editingRestaurant ? 'Edit restaurant' : 'Add a restaurant' }}</h2>
+      <button type="button" class="modal__close" ng-click="vm.closeRestaurant()" aria-label="Close">×</button>
+    </div>
+
+    <form ng-submit="vm.saveRestaurant()">
+      <div class="modal__body">
+        <div class="form-grid form-grid--2">
+          <div class="field">
+            <label class="field__label">Restaurant name</label>
+            <input class="input" ng-model="vm.restaurantForm.name" placeholder="Spice Route">
+          </div>
+          <div class="field">
+            <label class="field__label">Cuisine</label>
+            <input class="input" ng-model="vm.restaurantForm.cuisine" placeholder="North Indian">
+          </div>
+          <div class="field">
+            <label class="field__label">City</label>
+            <input class="input" ng-model="vm.restaurantForm.city" placeholder="Mumbai">
+          </div>
+          <div class="field">
+            <label class="field__label">Area / locality</label>
+            <input class="input" ng-model="vm.restaurantForm.area" placeholder="Bandra West">
+          </div>
+          <div class="field">
+            <label class="field__label">Delivery time</label>
+            <input class="input" ng-model="vm.restaurantForm.deliveryTime" placeholder="30-40 min">
+          </div>
+          <div class="field">
+            <label class="field__label">Price for two (₹)</label>
+            <input class="input" type="number" min="0" ng-model="vm.restaurantForm.priceForTwo">
+          </div>
+          <div class="field">
+            <label class="field__label">Rating (0–5)</label>
+            <input class="input" type="number" step="0.1" min="0" max="5" ng-model="vm.restaurantForm.rating">
+          </div>
+          <div class="field">
+            <label class="field__label">Cover emoji</label>
+            <input class="input" ng-model="vm.restaurantForm.emoji" maxlength="4" placeholder="🍛">
+          </div>
+          <div class="field">
+            <label class="field__label">Cover colour</label>
+            <select class="select" ng-model="vm.restaurantForm.theme">
+              <option ng-repeat="theme in vm.themes" value="{{ theme }}">{{ theme }}</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field__label">Tags (comma separated)</label>
+            <input class="input" ng-model="vm.restaurantTags" placeholder="Tandoor, Curries">
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field__label">Image URL (optional)</label>
+          <input class="input" ng-model="vm.restaurantForm.image" placeholder="https://…">
+          <span class="field__hint">Leave blank to use the coloured cover illustration.</span>
+        </div>
+
+        <div class="field">
+          <label class="field__label">Description</label>
+          <textarea class="textarea" ng-model="vm.restaurantForm.description"
+                    placeholder="What is this kitchen known for?"></textarea>
+        </div>
+
+        <div class="switch-row">
+          <div>
+            <p class="switch-row__label">Accepting orders</p>
+            <p class="switch-row__hint">Closed restaurants stay visible but cannot be ordered from.</p>
+          </div>
+          <input type="checkbox" ng-model="vm.restaurantForm.isOpen">
+        </div>
+      </div>
+
+      <div class="modal__foot">
+        <button type="button" class="btn btn--ghost" ng-click="vm.closeRestaurant()">Cancel</button>
+        <button type="submit" class="btn btn--primary" ng-disabled="vm.savingRestaurant">
+          {{ vm.savingRestaurant ? 'Saving…' : 'Save restaurant' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- =================================================== ITEM MODAL -->
+<div class="modal" ng-if="vm.itemModal" ng-click="vm.closeItem()">
+  <div class="modal__panel" ng-click="$event.stopPropagation()">
+    <div class="modal__head">
+      <h2 class="modal__title">{{ vm.editingItem ? 'Edit menu item' : 'Add a menu item' }}</h2>
+      <button type="button" class="modal__close" ng-click="vm.closeItem()" aria-label="Close">×</button>
+    </div>
+
+    <form ng-submit="vm.saveItem()">
+      <div class="modal__body">
+        <div class="form-grid form-grid--2">
+          <div class="field">
+            <label class="field__label">Dish name</label>
+            <input class="input" ng-model="vm.itemForm.name" placeholder="Paneer Tikka">
+          </div>
+          <div class="field">
+            <label class="field__label">Restaurant</label>
+            <select class="select" ng-model="vm.itemForm.restaurantId">
+              <option ng-repeat="restaurant in vm.restaurants" value="{{ restaurant._id }}">{{ restaurant.name }}</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field__label">Category</label>
+            <input class="input" ng-model="vm.itemForm.category" placeholder="Starters" list="categoryList">
+            <datalist id="categoryList">
+              <option value="Starters"></option>
+              <option value="Main Course"></option>
+              <option value="Breads"></option>
+              <option value="Rice"></option>
+              <option value="Beverages"></option>
+              <option value="Desserts"></option>
+            </datalist>
+          </div>
+          <div class="field">
+            <label class="field__label">Price (₹)</label>
+            <input class="input" type="number" min="1" ng-model="vm.itemForm.price">
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field__label">Description</label>
+          <textarea class="textarea" ng-model="vm.itemForm.description"
+                    placeholder="A short, tempting description"></textarea>
+        </div>
+
+        <div class="switch-row">
+          <div>
+            <p class="switch-row__label">Vegetarian</p>
+            <p class="switch-row__hint">Shows the green veg marker on the menu.</p>
+          </div>
+          <input type="checkbox" ng-model="vm.itemForm.isVeg">
+        </div>
+        <div class="switch-row">
+          <div>
+            <p class="switch-row__label">Bestseller</p>
+            <p class="switch-row__hint">Highlights the dish on the menu.</p>
+          </div>
+          <input type="checkbox" ng-model="vm.itemForm.isBestseller">
+        </div>
+        <div class="switch-row">
+          <div>
+            <p class="switch-row__label">Available</p>
+            <p class="switch-row__hint">Unavailable dishes cannot be added to a cart.</p>
+          </div>
+          <input type="checkbox" ng-model="vm.itemForm.isAvailable">
+        </div>
+      </div>
+
+      <div class="modal__foot">
+        <button type="button" class="btn btn--ghost" ng-click="vm.closeItem()">Cancel</button>
+        <button type="submit" class="btn btn--primary" ng-disabled="vm.savingItem">
+          {{ vm.savingItem ? 'Saving…' : 'Save item' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

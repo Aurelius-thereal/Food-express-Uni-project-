@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en" ng-app="foodExpress">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FoodExpress — Order food online</title>
+  <meta name="description" content="FoodExpress is an online food ordering system: browse restaurants, build a cart, pay with GST included and track your delivery live.">
+  <meta name="theme-color" content="#f2542d">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8D%9C%3C/text%3E%3C/svg%3E">
+</head>
+<body ng-controller="AppController as app">
+
+<header class="topbar">
+  <div class="shell topbar__inner">
+    <a class="brand" href="#/" aria-label="FoodExpress home">
+      <span class="brand__mark">🍜</span>
+      <span class="brand__text">Food<strong>Express</strong></span>
+    </a>
+
+    <nav class="nav" aria-label="Main navigation">
+      <a class="nav__link" href="#/" ng-class="{ 'nav__link--active': app.isActive('/') }">Restaurants</a>
+      <a class="nav__link" ng-if="app.user && !app.isAdmin()" href="#/orders"
+         ng-class="{ 'nav__link--active': app.isActive('/orders') }">My orders</a>
+      <a class="nav__link" ng-if="app.isAdmin()" href="#/admin"
+         ng-class="{ 'nav__link--active': app.isActive('/admin') }">Admin dashboard</a>
+      <a class="nav__link" ng-if="app.user && !app.isAdmin()" href="#/profile"
+         ng-class="{ 'nav__link--active': app.isActive('/profile') }">Profile</a>
+    </nav>
+
+    <div class="topbar__actions">
+      <a class="cart-btn" ng-if="!app.isAdmin()" href="#/cart" aria-label="View cart">
+        <span class="cart-btn__icon">🛒</span>
+        <span class="cart-btn__label">Cart</span>
+        <span class="cart-btn__count" ng-if="app.cartCount > 0">{{ app.cartCount }}</span>
+      </a>
+
+      <div class="user-menu" ng-if="app.user">
+        <button type="button" class="user-menu__toggle" ng-click="app.toggleMenu($event)" aria-haspopup="true">
+          <span class="avatar">{{ app.initials() }}</span>
+          <span class="user-menu__toggle-name">{{ app.user.name.split(' ')[0] }}</span>
+          <span class="user-menu__caret">▾</span>
+        </button>
+        <div class="user-menu__panel" ng-if="app.menuOpen">
+          <div class="user-menu__head">
+            <p class="user-menu__name">{{ app.user.name }}</p>
+            <p class="user-menu__email">{{ app.user.email }}</p>
+            <span class="badge badge--soft">{{ app.user.role === 'admin' ? 'Administrator' : 'Customer' }}</span>
+          </div>
+          <a class="user-menu__item" ng-if="app.isAdmin()" href="#/admin">Admin dashboard</a>
+          <a class="user-menu__item" ng-if="!app.isAdmin()" href="#/orders">My orders</a>
+          <a class="user-menu__item" href="#/profile">Profile settings</a>
+          <div class="user-menu__sep"></div>
+          <button type="button" class="user-menu__item user-menu__item--danger" ng-click="app.signOut()">Sign out</button>
+        </div>
+      </div>
+
+      <div class="topbar__guest" ng-if="!app.user">
+        <a class="btn btn--ghost btn--sm" href="#/login">Sign in</a>
+        <a class="btn btn--primary btn--sm" href="#/signup">Sign up</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="page" ng-view autoscroll="true"></main>
+
+<footer class="footer">
+  <div class="shell footer__inner">
+    <div class="footer__brand">
+      <a class="brand" href="#/">
+        <span class="brand__mark">🍜</span>
+        <span class="brand__text">Food<strong>Express</strong></span>
+      </a>
+      <p class="footer__tagline">A full-stack food ordering demo — AngularJS, Node.js, Express and JWT authentication.</p>
+    </div>
+    <div class="footer__cols">
+      <div class="footer__col">
+        <h4>Order</h4>
+        <a href="#/">Browse restaurants</a>
+        <a href="#/cart">Your cart</a>
+        <a href="#/orders">Track an order</a>
+      </div>
+      <div class="footer__col">
+        <h4>Account</h4>
+        <a href="#/login">Sign in</a>
+        <a href="#/signup">Create account</a>
+        <a href="#/profile">Profile</a>
+      </div>
+      <div class="footer__col">
+        <h4>Project</h4>
+        <a href="#/admin">Admin dashboard</a>
+        <span>GST 5% included</span>
+        <span>Cash · Card · UPI</span>
+      </div>
+    </div>
+  </div>
+  <div class="shell footer__bottom">
+    <span>© {{ app.year }} FoodExpress · BCA Full Stack Group Assignment</span>
+    <span>Built by Bhuvanesh, Irfan &amp; Faris</span>
+  </div>
+</footer>
+
+<div class="toast-stack" aria-live="polite">
+  <div class="toast" ng-class="'toast--' + t.type" ng-repeat="t in toasts track by t.id">
+    <span class="toast__icon">{{ t.icon }}</span>
+    <span class="toast__text">{{ t.text }}</span>
+    <button type="button" class="toast__close" ng-click="app.dismissToast(t.id)" aria-label="Dismiss">×</button>
+  </div>
+</div>
+
+<div class="modal" ng-if="confirmDialog" ng-click="confirmDialog.onCancel()">
+  <div class="modal__panel modal__panel--confirm" ng-click="$event.stopPropagation()">
+    <div class="modal__head">
+      <h3 class="modal__title">{{ confirmDialog.title }}</h3>
+    </div>
+    <div class="modal__body">
+      <p class="modal__text">{{ confirmDialog.message }}</p>
+    </div>
+    <div class="modal__foot">
+      <button type="button" class="btn btn--ghost" ng-click="confirmDialog.onCancel()">{{ confirmDialog.cancelLabel }}</button>
+      <button type="button" class="btn" ng-class="confirmDialog.danger ? 'btn--danger' : 'btn--primary'"
+              ng-click="confirmDialog.onConfirm()">{{ confirmDialog.confirmLabel }}</button>
+    </div>
+  </div>
+</div>
+
+<script src="vendor/angular.min.js"></script>
+<script src="vendor/angular-route.min.js"></script>
+<script src="js/app.js"></script>
+<script src="js/services.js"></script>
+<script src="js/shop.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

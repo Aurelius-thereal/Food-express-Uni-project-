@@ -1,0 +1,57 @@
+<div class="shell">
+  <div class="auth">
+    <div class="auth__grid">
+      <div class="auth__panel">
+        <h1 class="auth__title">Create your account</h1>
+        <p class="auth__sub">It takes less than a minute. Your cart is saved as soon as you sign in.</p>
+
+        <div class="alert alert--error" ng-if="vm.error" style="margin-bottom: 16px">
+          <span class="alert__icon">!</span><span>{{ vm.error }}</span>
+        </div>
+
+        <form ng-submit="vm.submit()" novalidate>
+          <div class="field">
+            <label class="field__label" for="name">Full name</label>
+            <input id="name" class="input" type="text" ng-model="vm.form.name"
+                   placeholder="Your name" autocomplete="name">
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="email">Email address</label>
+            <input id="email" class="input" type="email" ng-model="vm.form.email"
+                   placeholder="you@example.com" autocomplete="email">
+          </div>
+
+          <div class="form-grid form-grid--2">
+            <div class="field">
+              <label class="field__label" for="phone">Phone (optional)</label>
+              <input id="phone" class="input" type="tel" ng-model="vm.form.phone" placeholder="9876543210">
+            </div>
+            <div class="field">
+              <label class="field__label" for="password">Password</label>
+              <input id="password" class="input" type="password" ng-model="vm.form.password"
+                     placeholder="At least 6 characters" autocomplete="new-password">
+            </div>
+          </div>
+
+          <button class="btn btn--primary btn--block btn--lg" type="submit" ng-disabled="vm.busy">
+            {{ vm.busy ? 'Creating account…' : 'Create account' }}
+          </button>
+        </form>
+
+        <p class="auth__switch">Already have an account? <a href="#/login">Sign in</a></p>
+      </div>
+
+      <aside class="auth__art">
+        <span class="auth__art-emoji">🍱</span>
+        <h2 class="auth__art-title">One account, everything you need</h2>
+        <div class="auth__art-list">
+          <div class="auth__art-item"><span>🧾</span> Order history and receipts in one place</div>
+          <div class="auth__art-item"><span>🏠</span> Save your delivery address for faster checkout</div>
+          <div class="auth__art-item"><span>🛵</span> Reorder your favourites in two taps</div>
+          <div class="auth__art-item"><span>🔒</span> Passwords are hashed with bcrypt — never stored in plain text</div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>

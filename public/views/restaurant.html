@@ -1,0 +1,156 @@
+<div class="shell">
+  <div class="loading-row" ng-if="vm.loading">
+    <span class="spinner"></span> Loading the menu…
+  </div>
+
+  <div class="empty" ng-if="!vm.loading && vm.error">
+    <div class="empty__emoji">😕</div>
+    <p class="empty__title">We could not open that menu</p>
+    <p class="empty__text">{{ vm.error }}</p>
+    <a class="btn btn--primary" href="#/">Browse other restaurants</a>
+  </div>
+
+  <div ng-if="!vm.loading && vm.restaurant">
+    <section class="restaurant-hero">
+      <div class="restaurant-hero__cover cover--{{ vm.restaurant.theme }}"
+           ng-class="{ 'restaurant-hero__cover--photo': vm.restaurant.image }">
+        <span class="restaurant-hero__emoji" ng-if="!vm.restaurant.image">{{ vm.restaurant.emoji }}</span>
+        <img class="restaurant-hero__img" ng-if="vm.restaurant.image" ng-src="{{ vm.restaurant.image }}"
+             alt="{{ vm.restaurant.name }} — {{ vm.restaurant.cuisine }}"
+             onerror="this.style.display='none'">
+        <div class="restaurant-hero__tags">
+          <span class="restaurant-hero__tag" ng-repeat="tag in vm.restaurant.tags">{{ tag }}</span>
+        </div>
+      </div>
+      <div class="restaurant-hero__info">
+        <div class="restaurant-hero__row">
+          <div>
+            <h1 class="restaurant-hero__title">{{ vm.restaurant.name }}</h1>
+            <div class="restaurant-hero__meta">
+              <span class="restaurant-hero__chip">★ {{ vm.restaurant.rating }}
+                <span style="color: var(--muted); font-weight: 500">({{ vm.restaurant.reviews }} ratings)</span>
+              </span>
+              <span class="restaurant-hero__chip">🛵 {{ vm.restaurant.deliveryTime }}</span>
+              <span class="restaurant-hero__chip">📍 {{ vm.restaurant.area }}, {{ vm.restaurant.city }}</span>
+              <span class="restaurant-hero__chip">💰 ₹{{ vm.restaurant.priceForTwo }} for two</span>
+            </div>
+          </div>
+          <span class="badge" ng-class="vm.restaurant.isOpen ? 'badge--green' : 'badge--red'">
+            {{ vm.restaurant.isOpen ? 'Open now' : 'Closed' }}
+          </span>
+        </div>
+        <p class="restaurant-hero__desc">{{ vm.restaurant.description }}</p>
+        <div class="alert alert--warn" style="margin-top: 14px" ng-if="!vm.restaurant.isOpen">
+          <span class="alert__icon">!</span>
+          <span>This kitchen is closed right now, so orders cannot be placed. You can still browse the menu.</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="menu-layout">
+      <div class="menu-main">
+        <div class="cat-nav" ng-if="vm.categories.length">
+          <button type="button" class="cat-nav__link" ng-repeat="category in vm.categories"
+                  ng-click="vm.goToCategory(category)">{{ category }} ({{ vm.itemsIn(category).length }})</button>
+        </div>
+
+        <div class="menu-group" ng-repeat="category in vm.categories" id="{{ vm.categoryId(category) }}">
+          <div class="menu-group__head">
+            <h2 class="menu-group__title">{{ category }}</h2>
+            <span class="menu-group__count">{{ vm.itemsIn(category).length }} items</span>
+          </div>
+
+          <div class="mitem" ng-repeat="item in vm.itemsIn(category) track by item._id">
+            <div class="mitem__main">
+              <div class="mitem__title-row">
+                <span class="veg-mark" ng-class="{ 'veg-mark--nonveg': !item.isVeg }"
+                      title="{{ item.isVeg ? 'Vegetarian' : 'Non-vegetarian' }}"></span>
+                <span class="mitem__name">{{ item.name }}</span>
+                <span class="badge badge--amber" ng-if="item.isBestseller">★ Bestseller</span>
+                <span class="badge badge--red" ng-if="!item.isAvailable">Sold out</span>
+              </div>
+              <p class="mitem__desc">{{ item.description }}</p>
+              <div class="mitem__tags">
+                <span class="badge" ng-class="item.isVeg ? 'badge--green' : 'badge--red'">
+                  {{ item.isVeg ? 'Veg' : 'Non-veg' }}
+                </span>
+              </div>
+              <p class="mitem__price">{{ item.price | money }}</p>
+            </div>
+
+            <div class="mitem__action">
+              <div class="stepper" ng-if="vm.qtyOf(item._id) > 0">
+                <button type="button" class="stepper__btn" ng-click="vm.decrement(item)" aria-label="Remove one">−</button>
+                <span class="stepper__qty">{{ vm.qtyOf(item._id) }}</span>
+                <button type="button" class="stepper__btn" ng-click="vm.increment(item)" aria-label="Add one">+</button>
+              </div>
+              <button type="button" class="mitem__add" ng-if="vm.qtyOf(item._id) === 0"
+                      ng-disabled="!item.isAvailable || !vm.restaurant.isOpen"
+                      ng-click="vm.add(item)">Add</button>
+              <span class="mitem__note" ng-if="vm.qtyOf(item._id) > 0">In your cart</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="menu-side">
+        <div class="panel">
+          <div class="panel__head">
+            <h2 class="panel__title">Your cart</h2>
+            <span class="badge badge--soft" ng-if="vm.cartCount()">{{ vm.cartCount() }} item{{ vm.cartCount() === 1 ? '' : 's' }}</span>
+          </div>
+
+          <div class="cart-empty" ng-if="!vm.cartCount()">
+            <div class="cart-empty__emoji">🛒</div>
+            <p class="cart-empty__title">Nothing here yet</p>
+            <p class="cart-empty__text">Add a dish and it will show up here, ready for checkout.</p>
+          </div>
+
+          <div ng-if="vm.cartCount()">
+            <div class="cart-line" ng-repeat="item in vm.cartItems() track by item.itemId">
+              <span class="cart-line__emoji">{{ vm.restaurant.emoji }}</span>
+              <div class="cart-line__main">
+                <p class="cart-line__name">{{ item.name }}</p>
+                <p class="cart-line__meta">
+                  <span class="veg-mark" ng-class="{ 'veg-mark--nonveg': !item.isVeg }"></span>
+                  {{ item.qty }} × {{ item.price | money }}
+                </p>
+              </div>
+              <div class="cart-line__controls">
+                <span class="cart-line__price">{{ (item.price * item.qty) | money }}</span>
+              </div>
+            </div>
+
+            <hr class="divider">
+            <div class="summary__row">
+              <span>Subtotal</span><span>{{ vm.subtotal() | money }}</span>
+            </div>
+            <div class="summary__row">
+              <span>GST (5%)</span><span>{{ vm.gst() | money }}</span>
+            </div>
+            <div class="summary__row">
+              <span>Delivery fee</span><span>{{ vm.deliveryFee() === 0 ? 'Free' : (vm.deliveryFee() | money) }}</span>
+            </div>
+            <div class="summary__row summary__row--total">
+              <span>To pay</span><span>{{ vm.cartTotal() | money }}</span>
+            </div>
+
+            <div class="summary__note" ng-if="vm.deliveryFee() === 0">🚚 Free delivery unlocked</div>
+
+            <div class="summary__foot">
+              <a class="btn btn--primary btn--block" href="#/cart">Go to checkout</a>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="mobile-cart-bar" ng-if="vm.cartCount()">
+      <div class="mobile-cart-bar__text">
+        <span class="mobile-cart-bar__count">{{ vm.cartCount() }} item{{ vm.cartCount() === 1 ? '' : 's' }}</span>
+        <strong>{{ vm.cartTotal() | money }}</strong>
+      </div>
+      <a class="btn btn--sm" href="#/cart">View cart →</a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,59 @@
+<div class="shell">
+  <div class="auth">
+    <div class="auth__grid">
+      <div class="auth__panel">
+        <h1 class="auth__title">Welcome back</h1>
+        <p class="auth__sub">Sign in to see your cart, place orders and follow your delivery.</p>
+
+        <div class="alert alert--error" ng-if="vm.error" style="margin-bottom: 16px">
+          <span class="alert__icon">!</span><span>{{ vm.error }}</span>
+        </div>
+
+        <form ng-submit="vm.submit()" novalidate>
+          <div class="field">
+            <label class="field__label" for="email">Email address</label>
+            <input id="email" class="input" type="email" ng-model="vm.form.email"
+                   placeholder="you@example.com" autocomplete="email">
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="password">Password</label>
+            <input id="password" class="input" type="password" ng-model="vm.form.password"
+                   placeholder="Your password" autocomplete="current-password">
+          </div>
+
+          <button class="btn btn--primary btn--block btn--lg" type="submit" ng-disabled="vm.busy">
+            {{ vm.busy ? 'Signing in…' : 'Sign in' }}
+          </button>
+        </form>
+
+        <p class="auth__switch">New to FoodExpress? <a href="#/signup">Create an account</a></p>
+
+        <div class="demo">
+          <p class="demo__title">Demo accounts</p>
+          <div class="demo__row">
+            <button type="button" class="demo__btn" ng-click="vm.fill('customer')">
+              Customer
+              <small>ravi@example.com · ravi123</small>
+            </button>
+            <button type="button" class="demo__btn" ng-click="vm.fill('admin')">
+              Administrator
+              <small>admin@foodapp.com · admin123</small>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <aside class="auth__art">
+        <span class="auth__art-emoji">🛵</span>
+        <h2 class="auth__art-title">From the kitchen to your door</h2>
+        <div class="auth__art-list">
+          <div class="auth__art-item"><span>✅</span> Track every stage of your order live</div>
+          <div class="auth__art-item"><span>🧾</span> Transparent bills with GST included</div>
+          <div class="auth__art-item"><span>💳</span> Pay by cash, card or UPI</div>
+          <div class="auth__art-item"><span>💾</span> Your cart and address are saved for next time</div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>

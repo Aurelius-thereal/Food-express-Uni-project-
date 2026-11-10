@@ -1,0 +1,1357 @@
+{
+  "counters": {
+    "user": 3,
+    "restaurant": 8,
+    "item": 80,
+    "order": 1005
+  },
+  "users": [
+    {
+      "_id": 1,
+      "name": "Admin",
+      "email": "admin@foodapp.com",
+      "passwordHash": "$2a$10$B6/4qmT5fzi2h5wxUdfBdOTE3kOgwgqA5ACMgTU9fJRreEoy60BJG",
+      "phone": "9000000001",
+      "address": "FoodExpress HQ, Fort, Mumbai",
+      "role": "admin",
+      "createdAt": "2026-08-12T15:30:28.819Z"
+    },
+    {
+      "_id": 2,
+      "name": "Ravi Kumar",
+      "email": "ravi@example.com",
+      "passwordHash": "$2a$10$8huu8abLH4vrKPfIYyTLpuKmXSIBHwHZp31zGlwqbrM4h7D2Jgl0W",
+      "phone": "9876543210",
+      "address": "12B, Rose Villa, Hill Road, Bandra West, Mumbai",
+      "role": "customer",
+      "createdAt": "2026-10-11T15:30:28.899Z"
+    },
+    {
+      "_id": 3,
+      "name": "Priya Sharma",
+      "email": "priya@example.com",
+      "passwordHash": "$2a$10$IT2rsLFgi7dv5vNOJfYwhex7wzEjZGE7BncwPpretU3B6Kh/sNZmG",
+      "phone": "9820011223",
+      "address": "Flat 501, Lake View, Kalyani Nagar, Pune",
+      "role": "customer",
+      "createdAt": "2026-10-20T15:30:28.977Z"
+    }
+  ],
+  "restaurants": [
+    {
+      "_id": 1,
+      "name": "Spice Route",
+      "cuisine": "North Indian",
+      "city": "Mumbai",
+      "area": "Bandra West",
+      "rating": 4.5,
+      "reviews": 1284,
+      "deliveryTime": "30-40 min",
+      "priceForTwo": 450,
+      "emoji": "🍛",
+      "theme": "sunset",
+      "isOpen": true,
+      "description": "Slow-cooked curries, tandoori kebabs and buttery naans from the kitchens of Punjab.",
+      "tags": [
+        "Tandoor",
+        "Curries",
+        "Family friendly"
+      ],
+      "image": "/img/restaurants/spice-route.jpg"
+    },
+    {
+      "_id": 2,
+      "name": "Dosa Junction",
+      "cuisine": "South Indian",
+      "city": "Bengaluru",
+      "area": "Indiranagar",
+      "rating": 4.6,
+      "reviews": 2140,
+      "deliveryTime": "25-35 min",
+      "priceForTwo": 300,
+      "emoji": "🥘",
+      "theme": "amber",
+      "isOpen": true,
+      "description": "Crisp dosas, fluffy idlis and filter coffee brewed the old-fashioned way.",
+      "tags": [
+        "Pure veg",
+        "Breakfast",
+        "Budget"
+      ],
+      "image": "/img/restaurants/dosa-junction.jpg"
+    },
+    {
+      "_id": 3,
+      "name": "Wok & Roll",
+      "cuisine": "Chinese",
+      "city": "Mumbai",
+      "area": "Andheri East",
+      "rating": 4.2,
+      "reviews": 876,
+      "deliveryTime": "35-45 min",
+      "priceForTwo": 500,
+      "emoji": "🍜",
+      "theme": "jade",
+      "isOpen": true,
+      "description": "Wok-tossed noodles, smoky fried rice and Indo-Chinese classics with real heat.",
+      "tags": [
+        "Wok tossed",
+        "Spicy",
+        "Late night"
+      ],
+      "image": "/img/restaurants/wok-and-roll.jpg"
+    },
+    {
+      "_id": 4,
+      "name": "Bella Napoli",
+      "cuisine": "Italian",
+      "city": "Pune",
+      "area": "Koregaon Park",
+      "rating": 4.7,
+      "reviews": 1520,
+      "deliveryTime": "40-50 min",
+      "priceForTwo": 700,
+      "emoji": "🍕",
+      "theme": "tomato",
+      "isOpen": true,
+      "description": "Wood-fired Neapolitan pizzas, handmade pasta and a proper tiramisu.",
+      "tags": [
+        "Wood fired",
+        "Pasta",
+        "Desserts"
+      ],
+      "image": "/img/restaurants/bella-napoli.jpg"
+    },
+    {
+      "_id": 5,
+      "name": "Biryani Bazaar",
+      "cuisine": "Biryani",
+      "city": "Hyderabad",
+      "area": "Banjara Hills",
+      "rating": 4.4,
+      "reviews": 3120,
+      "deliveryTime": "30-45 min",
+      "priceForTwo": 400,
+      "emoji": "🍚",
+      "theme": "saffron",
+      "isOpen": true,
+      "description": "Dum-cooked Hyderabadi biryani sealed with dough and served with mirchi ka salan.",
+      "tags": [
+        "Dum biryani",
+        "Kebabs",
+        "Bestseller"
+      ],
+      "image": "/img/restaurants/biryani-bazaar.jpg"
+    },
+    {
+      "_id": 6,
+      "name": "Green Bowl",
+      "cuisine": "Healthy",
+      "city": "Bengaluru",
+      "area": "Koramangala",
+      "rating": 4.3,
+      "reviews": 640,
+      "deliveryTime": "20-30 min",
+      "priceForTwo": 350,
+      "emoji": "🥗",
+      "theme": "leaf",
+      "isOpen": false,
+      "description": "Protein-packed grain bowls, fresh salads and cold-pressed smoothies.",
+      "tags": [
+        "High protein",
+        "Salads",
+        "Smoothies"
+      ],
+      "image": "/img/restaurants/green-bowl.jpg"
+    },
+    {
+      "_id": 7,
+      "name": "Burger Barn",
+      "cuisine": "Fast Food",
+      "city": "Pune",
+      "area": "Viman Nagar",
+      "rating": 4.1,
+      "reviews": 1890,
+      "deliveryTime": "20-30 min",
+      "priceForTwo": 300,
+      "emoji": "🍔",
+      "theme": "caramel",
+      "isOpen": true,
+      "description": "Smashed patties, crinkle-cut fries and thick shakes — comfort food, fast.",
+      "tags": [
+        "Burgers",
+        "Combos",
+        "Quick"
+      ],
+      "image": "/img/restaurants/burger-barn.jpg"
+    },
+    {
+      "_id": 8,
+      "name": "Sweet Tooth",
+      "cuisine": "Desserts",
+      "city": "Mumbai",
+      "area": "Juhu",
+      "rating": 4.8,
+      "reviews": 980,
+      "deliveryTime": "15-25 min",
+      "priceForTwo": 250,
+      "emoji": "🍰",
+      "theme": "berry",
+      "isOpen": true,
+      "description": "Freshly baked cakes, pastries and Indian sweets delivered chilled.",
+      "tags": [
+        "Bakery",
+        "Cakes",
+        "Gifting"
+      ],
+      "image": "/img/restaurants/sweet-tooth.jpg"
+    }
+  ],
+  "items": [
+    {
+      "_id": 1,
+      "restaurantId": 1,
+      "category": "Starters",
+      "name": "Paneer Tikka",
+      "price": 249,
+      "isVeg": true,
+      "description": "Char-grilled cottage cheese cubes with mint chutney",
+      "isBestseller": true,
+      "isAvailable": true
+    },
+    {
+      "_id": 2,
+      "restaurantId": 1,
+      "category": "Starters",
+      "name": "Chicken Seekh Kebab",
+      "price": 289,
+      "isVeg": false,
+      "description": "Minced chicken skewers finished in the tandoor",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 3,
+      "restaurantId": 1,
+      "category": "Starters",
+      "name": "Tandoori Mushroom",
+      "price": 239,
+      "isVeg": true,
+      "description": "Button mushrooms marinated in yoghurt and spices",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 4,
+      "restaurantId": 1,
+      "category": "Main Course",
+      "name": "Butter Chicken",
+      "price": 329,
+      "isVeg": false,
+      "description": "Tandoori chicken simmered in a silky tomato gravy",
+      "isBestseller": true,
+      "isAvailable": true
+    },
+    {
+      "_id": 5,
+      "restaurantId": 1,
+      "category": "Main Course",
+      "name": "Paneer Butter Masala",
+      "price": 279,
+      "isVeg": true,
+      "description": "Cottage cheese in a creamy cashew-tomato gravy",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 6,
+      "restaurantId": 1,
+      "category": "Main Course",
+      "name": "Dal Makhani",
+      "price": 219,
+      "isVeg": true,
+      "description": "Black lentils slow cooked overnight with butter",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 7,
+      "restaurantId": 1,
+      "category": "Main Course",
+      "name": "Kadhai Chicken",
+      "price": 319,
+      "isVeg": false,
+      "description": "Chicken tossed with peppers and fresh coriander",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 8,
+      "restaurantId": 1,
+      "category": "Breads",
+      "name": "Butter Naan",
+      "price": 49,
+      "isVeg": true,
+      "description": "Soft tandoor naan brushed with butter",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 9,
+      "restaurantId": 1,
+      "category": "Breads",
+      "name": "Laccha Paratha",
+      "price": 59,
+      "isVeg": true,
+      "description": "Flaky layered whole wheat paratha",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 10,
+      "restaurantId": 1,
+      "category": "Breads",
+      "name": "Tandoori Roti",
+      "price": 29,
+      "isVeg": true,
+      "description": "Whole wheat roti straight off the tandoor",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 11,
+      "restaurantId": 1,
+      "category": "Rice",
+      "name": "Jeera Rice",
+      "price": 149,
+      "isVeg": true,
+      "description": "Basmati rice tempered with cumin",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 12,
+      "restaurantId": 1,
+      "category": "Rice",
+      "name": "Veg Pulao",
+      "price": 169,
+      "isVeg": true,
+      "description": "Fragrant rice with seasonal vegetables",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 13,
+      "restaurantId": 1,
+      "category": "Desserts",
+      "name": "Gulab Jamun",
+      "price": 99,
+      "isVeg": true,
+      "description": "Two warm jamuns soaked in cardamom syrup",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 14,
+      "restaurantId": 1,
+      "category": "Beverages",
+      "name": "Masala Chaas",
+      "price": 79,
+      "isVeg": true,
+      "description": "Spiced buttermilk with roasted cumin",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 15,
+      "restaurantId": 2,
+      "category": "Breakfast",
+      "name": "Masala Dosa",
+      "price": 129,
+      "isVeg": true,
+      "description": "Crisp dosa filled with spiced potato masala",
+      "isBestseller": true,
+      "isAvailable": true
+    },
+    {
+      "_id": 16,
+      "restaurantId": 2,
+      "category": "Breakfast",
+      "name": "Plain Dosa",
+      "price": 99,
+      "isVeg": true,
+      "description": "Golden dosa served with sambar and three chutneys",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 17,
+      "restaurantId": 2,
+      "category": "Breakfast",
+      "name": "Rava Onion Dosa",
+      "price": 139,
+      "isVeg": true,
+      "description": "Semolina dosa studded with onions and curry leaves",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 18,
+      "restaurantId": 2,
+      "category": "Breakfast",
+      "name": "Idli Vada Combo",
+      "price": 89,
+      "isVeg": true,
+      "description": "Two idlis and one medu vada with sambar",
+      "isBestseller": true,
+      "isAvailable": true
+    },
+    {
+      "_id": 19,
+      "restaurantId": 2,
+      "category": "Lunch",
+      "name": "South Indian Thali",
+      "price": 249,
+      "isVeg": true,
+      "description": "Rice, sambar, rasam, poriyal, curd and payasam",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 20,
+      "restaurantId": 2,
+      "category": "Lunch",
+      "name": "Bisi Bele Bath",
+      "price": 149,
+      "isVeg": true,
+      "description": "Karnataka-style rice and lentil one-pot meal",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 21,
+      "restaurantId": 2,
+      "category": "Lunch",
+      "name": "Curd Rice",
+      "price": 109,
+      "isVeg": true,
+      "description": "Comforting curd rice with pomegranate and tempering",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 22,
+      "restaurantId": 2,
+      "category": "Snacks",
+      "name": "Medu Vada",
+      "price": 69,
+      "isVeg": true,
+      "description": "Crisp lentil doughnuts with coconut chutney",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 23,
+      "restaurantId": 2,
+      "category": "Snacks",
+      "name": "Mysore Bonda",
+      "price": 79,
+      "isVeg": true,
+      "description": "Fluffy fried dumplings with green chutney",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 24,
+      "restaurantId": 2,
+      "category": "Beverages",
+      "name": "Filter Coffee",
+      "price": 49,
+      "isVeg": true,
+      "description": "Strong decoction with frothy hot milk",
+      "isBestseller": true,
+      "isAvailable": true
+    },
+    {
+      "_id": 25,
+      "restaurantId": 2,
+      "category": "Beverages",
+      "name": "Badam Milk",
+      "price": 69,
+      "isVeg": true,
+      "description": "Chilled almond milk with saffron",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 26,
+      "restaurantId": 3,
+      "category": "Starters",
+      "name": "Veg Spring Rolls",
+      "price": 179,
+      "isVeg": true,
+      "description": "Crisp rolls stuffed with cabbage and carrots",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 27,
+      "restaurantId": 3,
+      "category": "Starters",
+      "name": "Chilli Chicken",
+      "price": 249,
+      "isVeg": false,
+      "description": "Crispy chicken tossed with peppers and chilli sauce",
+      "isBestseller": true,
+      "isAvailable": true
+    },
+    {
+      "_id": 28,
+      "restaurantId": 3,
+      "category": "Starters",
+      "name": "Crispy Corn",
+      "price": 169,
+      "isVeg": true,
+      "description": "Sweet corn kernels fried and tossed in pepper salt",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 29,
+      "restaurantId": 3,
+      "category": "Noodles",
+      "name": "Veg Hakka Noodles",
+      "price": 199,
+      "isVeg": true,
+      "description": "Classic wok-tossed noodles with vegetables",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 30,
+      "restaurantId": 3,
+      "category": "Noodles",
+      "name": "Chicken Schezwan Noodles",
+      "price": 239,
+      "isVeg": false,
+      "description": "Noodles in a fiery house-made schezwan sauce",
+      "isBestseller": true,
+      "isAvailable": true
+    },
+    {
+      "_id": 31,
+      "restaurantId": 3,
+      "category": "Rice",
+      "name": "Egg Fried Rice",
+      "price": 209,
+      "isVeg": false,
+      "description": "Fried rice with scrambled egg and spring onion",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 32,
+      "restaurantId": 3,
+      "category": "Rice",
+      "name": "Veg Schezwan Fried Rice",
+      "price": 199,
+      "isVeg": true,
+      "description": "Spicy fried rice with crunchy vegetables",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 33,
+      "restaurantId": 3,
+      "category": "Main Course",
+      "name": "Paneer Chilli Gravy",
+      "price": 259,
+      "isVeg": true,
+      "description": "Paneer in a glossy chilli-garlic gravy",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 34,
+      "restaurantId": 3,
+      "category": "Main Course",
+      "name": "Kung Pao Chicken",
+      "price": 289,
+      "isVeg": false,
+      "description": "Chicken with peanuts, dried chilli and scallions",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 35,
+      "restaurantId": 3,
+      "category": "Beverages",
+      "name": "Iced Lemon Tea",
+      "price": 89,
+      "isVeg": true,
+      "description": "Freshly brewed tea with lemon and ice",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 36,
+      "restaurantId": 4,
+      "category": "Starters",
+      "name": "Garlic Bread with Cheese",
+      "price": 199,
+      "isVeg": true,
+      "description": "Toasted baguette with garlic butter and mozzarella",
+      "isBestseller": true,
+      "isAvailable": true
+    },
+    {
+      "_id": 37,
+      "restaurantId": 4,
+      "category": "Starters",
+      "name": "Bruschetta Pomodoro",
+      "price": 219,
+      "isVeg": true,
+      "description": "Grilled bread topped with tomato, basil and olive oil",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 38,
+      "restaurantId": 4,
+      "category": "Pizza",
+      "name": "Margherita",
+      "price": 349,
+      "isVeg": true,
+      "description": "San Marzano tomato, fior di latte and basil",
+      "isBestseller": true,
+      "isAvailable": true
+    },
+    {
+      "_id": 39,
+      "restaurantId": 4,
+      "category": "Pizza",
+      "name": "Farmhouse Pizza",
+      "price": 449,
+      "isVeg": true,
+      "description": "Peppers, onion, corn, olives and mushroom",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 40,
+      "restaurantId": 4,
+      "category": "Pizza",
+      "name": "Pepperoni Pizza",
+      "price": 499,
+      "isVeg": false,
+      "description": "Spicy pepperoni with mozzarella and oregano",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 41,
+      "restaurantId": 4,
+      "category": "Pasta",
+      "name": "Penne Alfredo",
+      "price": 379,
+      "isVeg": true,
+      "description": "Penne in a garlicky parmesan cream sauce",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 42,
+      "restaurantId": 4,
+      "category": "Pasta",
+      "name": "Spaghetti Aglio e Olio",
+      "price": 329,
+      "isVeg": true,
+      "description": "Garlic, chilli flakes and extra virgin olive oil",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 43,
+      "restaurantId": 4,
+      "category": "Pasta",
+      "name": "Chicken Arrabbiata",
+      "price": 429,
+      "isVeg": false,
+      "description": "Spaghetti with chicken in a spicy tomato sauce",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 44,
+      "restaurantId": 4,
+      "category": "Desserts",
+      "name": "Tiramisu",
+      "price": 279,
+      "isVeg": true,
+      "description": "Mascarpone, espresso and cocoa — made in house",
+      "isBestseller": true,
+      "isAvailable": true
+    },
+    {
+      "_id": 45,
+      "restaurantId": 4,
+      "category": "Desserts",
+      "name": "Chocolate Lava Cake",
+      "price": 249,
+      "isVeg": true,
+      "description": "Warm cake with a molten chocolate centre",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 46,
+      "restaurantId": 4,
+      "category": "Beverages",
+      "name": "Fresh Lime Soda",
+      "price": 129,
+      "isVeg": true,
+      "description": "Sweet, salted or mixed — your call",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 47,
+      "restaurantId": 5,
+      "category": "Biryani",
+      "name": "Hyderabadi Chicken Dum Biryani",
+      "price": 329,
+      "isVeg": false,
+      "description": "Long grain basmati layered with chicken and saffron",
+      "isBestseller": true,
+      "isAvailable": true
+    },
+    {
+      "_id": 48,
+      "restaurantId": 5,
+      "category": "Biryani",
+      "name": "Mutton Biryani",
+      "price": 399,
+      "isVeg": false,
+      "description": "Slow dum-cooked mutton with whole spices",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 49,
+      "restaurantId": 5,
+      "category": "Biryani",
+      "name": "Veg Dum Biryani",
+      "price": 259,
+      "isVeg": true,
+      "description": "Vegetables and basmati sealed and dum cooked",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 50,
+      "restaurantId": 5,
+      "category": "Biryani",
+      "name": "Egg Biryani",
+      "price": 279,
+      "isVeg": false,
+      "description": "Spiced rice with boiled eggs and fried onions",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 51,
+      "restaurantId": 5,
+      "category": "Starters",
+      "name": "Chicken 65",
+      "price": 269,
+      "isVeg": false,
+      "description": "Crispy fried chicken with curry leaf and yoghurt",
+      "isBestseller": true,
+      "isAvailable": true
+    },
+    {
+      "_id": 52,
+      "restaurantId": 5,
+      "category": "Starters",
+      "name": "Mirchi Ka Salan",
+      "price": 129,
+      "isVeg": true,
+      "description": "Peanut and sesame gravy with green chillies",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 53,
+      "restaurantId": 5,
+      "category": "Sides",
+      "name": "Raita",
+      "price": 49,
+      "isVeg": true,
+      "description": "Cooling onion and cucumber yoghurt",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 54,
+      "restaurantId": 5,
+      "category": "Sweets",
+      "name": "Double Ka Meetha",
+      "price": 119,
+      "isVeg": true,
+      "description": "Fried bread pudding in saffron milk",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 55,
+      "restaurantId": 5,
+      "category": "Beverages",
+      "name": "Sweet Lassi",
+      "price": 89,
+      "isVeg": true,
+      "description": "Thick curd lassi topped with malai",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 56,
+      "restaurantId": 6,
+      "category": "Bowls",
+      "name": "Quinoa Power Bowl",
+      "price": 319,
+      "isVeg": true,
+      "description": "Quinoa, chickpeas, roasted veg and tahini dressing",
+      "isBestseller": true,
+      "isAvailable": true
+    },
+    {
+      "_id": 57,
+      "restaurantId": 6,
+      "category": "Bowls",
+      "name": "Grilled Chicken Bowl",
+      "price": 349,
+      "isVeg": false,
+      "description": "Grilled chicken, brown rice and greens",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 58,
+      "restaurantId": 6,
+      "category": "Bowls",
+      "name": "Paneer Tikka Bowl",
+      "price": 299,
+      "isVeg": true,
+      "description": "Tandoori paneer, millet and mint yoghurt",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 59,
+      "restaurantId": 6,
+      "category": "Salads",
+      "name": "Caesar Salad",
+      "price": 279,
+      "isVeg": true,
+      "description": "Cos lettuce, croutons and creamy dressing",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 60,
+      "restaurantId": 6,
+      "category": "Salads",
+      "name": "Mediterranean Salad",
+      "price": 259,
+      "isVeg": true,
+      "description": "Olives, feta, cucumber and cherry tomato",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 61,
+      "restaurantId": 6,
+      "category": "Smoothies",
+      "name": "Berry Blast Smoothie",
+      "price": 199,
+      "isVeg": true,
+      "description": "Mixed berries, banana and curd",
+      "isBestseller": true,
+      "isAvailable": true
+    },
+    {
+      "_id": 62,
+      "restaurantId": 6,
+      "category": "Smoothies",
+      "name": "Mango Protein Shake",
+      "price": 219,
+      "isVeg": true,
+      "description": "Alphonso mango with whey protein",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 63,
+      "restaurantId": 6,
+      "category": "Snacks",
+      "name": "Hummus & Pita",
+      "price": 179,
+      "isVeg": true,
+      "description": "House hummus with warm whole wheat pita",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 64,
+      "restaurantId": 7,
+      "category": "Burgers",
+      "name": "Classic Veg Burger",
+      "price": 129,
+      "isVeg": true,
+      "description": "Crunchy veg patty, lettuce and house sauce",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 65,
+      "restaurantId": 7,
+      "category": "Burgers",
+      "name": "Crispy Chicken Burger",
+      "price": 179,
+      "isVeg": false,
+      "description": "Buttermilk-fried chicken with pickles",
+      "isBestseller": true,
+      "isAvailable": true
+    },
+    {
+      "_id": 66,
+      "restaurantId": 7,
+      "category": "Burgers",
+      "name": "Paneer Zinger Burger",
+      "price": 189,
+      "isVeg": true,
+      "description": "Spicy paneer patty with cheese and slaw",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 67,
+      "restaurantId": 7,
+      "category": "Sides",
+      "name": "Peri Peri Fries",
+      "price": 119,
+      "isVeg": true,
+      "description": "Crinkle-cut fries with peri peri seasoning",
+      "isBestseller": true,
+      "isAvailable": true
+    },
+    {
+      "_id": 68,
+      "restaurantId": 7,
+      "category": "Sides",
+      "name": "Cheesy Nachos",
+      "price": 179,
+      "isVeg": true,
+      "description": "Corn chips with cheese sauce and jalapenos",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 69,
+      "restaurantId": 7,
+      "category": "Sides",
+      "name": "Onion Rings",
+      "price": 129,
+      "isVeg": true,
+      "description": "Battered onion rings with dip",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 70,
+      "restaurantId": 7,
+      "category": "Combos",
+      "name": "Burger + Fries Combo",
+      "price": 249,
+      "isVeg": true,
+      "description": "Any veg burger with peri peri fries and a cola",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 71,
+      "restaurantId": 7,
+      "category": "Combos",
+      "name": "Chicken Meal Box",
+      "price": 329,
+      "isVeg": false,
+      "description": "Chicken burger, fries, dip and a cola",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 72,
+      "restaurantId": 7,
+      "category": "Beverages",
+      "name": "Chocolate Thick Shake",
+      "price": 169,
+      "isVeg": true,
+      "description": "Chocolate ice cream blended thick",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 73,
+      "restaurantId": 7,
+      "category": "Beverages",
+      "name": "Cold Coffee",
+      "price": 149,
+      "isVeg": true,
+      "description": "Classic cold coffee with ice cream",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 74,
+      "restaurantId": 8,
+      "category": "Cakes",
+      "name": "Belgian Chocolate Slice",
+      "price": 219,
+      "isVeg": true,
+      "description": "Dark chocolate ganache on a moist sponge",
+      "isBestseller": true,
+      "isAvailable": true
+    },
+    {
+      "_id": 75,
+      "restaurantId": 8,
+      "category": "Cakes",
+      "name": "Red Velvet Pastry",
+      "price": 199,
+      "isVeg": true,
+      "description": "Cream cheese frosting, cocoa sponge",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 76,
+      "restaurantId": 8,
+      "category": "Sweets",
+      "name": "Rasmalai (2 pcs)",
+      "price": 149,
+      "isVeg": true,
+      "description": "Chenna discs in saffron-infused milk",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 77,
+      "restaurantId": 8,
+      "category": "Sweets",
+      "name": "Gajar Halwa",
+      "price": 169,
+      "isVeg": true,
+      "description": "Grated carrot pudding with ghee and nuts",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 78,
+      "restaurantId": 8,
+      "category": "Ice Cream",
+      "name": "Vanilla Bean Tub",
+      "price": 249,
+      "isVeg": true,
+      "description": "500 ml of real Madagascar vanilla",
+      "isBestseller": false,
+      "isAvailable": true
+    },
+    {
+      "_id": 79,
+      "restaurantId": 8,
+      "category": "Ice Cream",
+      "name": "Brownie Sundae",
+      "price": 229,
+      "isVeg": true,
+      "description": "Warm brownie, vanilla scoop, chocolate sauce",
+      "isBestseller": true,
+      "isAvailable": true
+    },
+    {
+      "_id": 80,
+      "restaurantId": 8,
+      "category": "Beverages",
+      "name": "Hot Chocolate",
+      "price": 159,
+      "isVeg": true,
+      "description": "Belgian cocoa with steamed milk",
+      "isBestseller": false,
+      "isAvailable": true
+    }
+  ],
+  "orders": [
+    {
+      "_id": 1001,
+      "orderNumber": "FE-1001",
+      "userId": 2,
+      "restaurantId": 1,
+      "restaurantName": "Spice Route",
+      "restaurantEmoji": "🍛",
+      "restaurantTheme": "sunset",
+      "items": [
+        {
+          "itemId": 4,
+          "name": "Butter Chicken",
+          "price": 329,
+          "qty": 1,
+          "isVeg": false,
+          "lineTotal": 329
+        },
+        {
+          "itemId": 8,
+          "name": "Butter Naan",
+          "price": 49,
+          "qty": 2,
+          "isVeg": true,
+          "lineTotal": 98
+        }
+      ],
+      "address": "12B, Rose Villa, Hill Road, Bandra West, Mumbai",
+      "phone": "9876543210",
+      "paymentMethod": "UPI",
+      "subtotal": 427,
+      "gst": 21,
+      "deliveryFee": 29,
+      "total": 477,
+      "status": "Delivered",
+      "statusHistory": [
+        {
+          "status": "Placed",
+          "at": "2026-11-07T13:30:28.977Z"
+        },
+        {
+          "status": "Confirmed",
+          "at": "2026-11-07T13:42:28.977Z"
+        },
+        {
+          "status": "Preparing",
+          "at": "2026-11-07T13:54:28.977Z"
+        },
+        {
+          "status": "Out for Delivery",
+          "at": "2026-11-07T14:06:28.977Z"
+        },
+        {
+          "status": "Delivered",
+          "at": "2026-11-07T14:18:28.977Z"
+        }
+      ],
+      "createdAt": "2026-11-07T13:30:28.977Z",
+      "updatedAt": "2026-11-07T13:30:28.977Z"
+    },
+    {
+      "_id": 1002,
+      "orderNumber": "FE-1002",
+      "userId": 2,
+      "restaurantId": 2,
+      "restaurantName": "Dosa Junction",
+      "restaurantEmoji": "🥘",
+      "restaurantTheme": "amber",
+      "items": [
+        {
+          "itemId": 15,
+          "name": "Masala Dosa",
+          "price": 129,
+          "qty": 2,
+          "isVeg": true,
+          "lineTotal": 258
+        },
+        {
+          "itemId": 24,
+          "name": "Filter Coffee",
+          "price": 49,
+          "qty": 2,
+          "isVeg": true,
+          "lineTotal": 98
+        }
+      ],
+      "address": "12B, Rose Villa, Hill Road, Bandra West, Mumbai",
+      "phone": "9876543210",
+      "paymentMethod": "Cash on Delivery",
+      "subtotal": 356,
+      "gst": 18,
+      "deliveryFee": 29,
+      "total": 403,
+      "status": "Out for Delivery",
+      "statusHistory": [
+        {
+          "status": "Placed",
+          "at": "2026-11-10T14:42:28.978Z"
+        },
+        {
+          "status": "Confirmed",
+          "at": "2026-11-10T14:54:28.978Z"
+        },
+        {
+          "status": "Preparing",
+          "at": "2026-11-10T15:06:28.978Z"
+        },
+        {
+          "status": "Out for Delivery",
+          "at": "2026-11-10T15:18:28.978Z"
+        }
+      ],
+      "createdAt": "2026-11-10T14:42:28.978Z",
+      "updatedAt": "2026-11-10T14:42:28.978Z"
+    },
+    {
+      "_id": 1003,
+      "orderNumber": "FE-1003",
+      "userId": 2,
+      "restaurantId": 5,
+      "restaurantName": "Biryani Bazaar",
+      "restaurantEmoji": "🍚",
+      "restaurantTheme": "saffron",
+      "items": [
+        {
+          "itemId": 39,
+          "name": "Farmhouse Pizza",
+          "price": 449,
+          "qty": 1,
+          "isVeg": true,
+          "lineTotal": 449
+        },
+        {
+          "itemId": 44,
+          "name": "Tiramisu",
+          "price": 279,
+          "qty": 1,
+          "isVeg": true,
+          "lineTotal": 279
+        }
+      ],
+      "address": "12B, Rose Villa, Hill Road, Bandra West, Mumbai",
+      "phone": "9876543210",
+      "paymentMethod": "Cash on Delivery",
+      "subtotal": 728,
+      "gst": 36,
+      "deliveryFee": 0,
+      "total": 764,
+      "status": "Placed",
+      "statusHistory": [
+        {
+          "status": "Placed",
+          "at": "2026-11-10T15:21:28.978Z"
+        }
+      ],
+      "createdAt": "2026-11-10T15:21:28.978Z",
+      "updatedAt": "2026-11-10T15:21:28.978Z"
+    },
+    {
+      "_id": 1004,
+      "orderNumber": "FE-1004",
+      "userId": 3,
+      "restaurantId": 4,
+      "restaurantName": "Bella Napoli",
+      "restaurantEmoji": "🍕",
+      "restaurantTheme": "tomato",
+      "items": [
+        {
+          "itemId": 29,
+          "name": "Veg Hakka Noodles",
+          "price": 199,
+          "qty": 1,
+          "isVeg": true,
+          "lineTotal": 199
+        },
+        {
+          "itemId": 25,
+          "name": "Badam Milk",
+          "price": 69,
+          "qty": 1,
+          "isVeg": true,
+          "lineTotal": 69
+        }
+      ],
+      "address": "Flat 501, Lake View, Kalyani Nagar, Pune",
+      "phone": "9820011223",
+      "paymentMethod": "Card",
+      "subtotal": 268,
+      "gst": 13,
+      "deliveryFee": 29,
+      "total": 310,
+      "status": "Delivered",
+      "statusHistory": [
+        {
+          "status": "Placed",
+          "at": "2026-11-09T12:30:28.978Z"
+        },
+        {
+          "status": "Confirmed",
+          "at": "2026-11-09T12:42:28.978Z"
+        },
+        {
+          "status": "Preparing",
+          "at": "2026-11-09T12:54:28.978Z"
+        },
+        {
+          "status": "Out for Delivery",
+          "at": "2026-11-09T13:06:28.978Z"
+        },
+        {
+          "status": "Delivered",
+          "at": "2026-11-09T13:18:28.978Z"
+        }
+      ],
+      "createdAt": "2026-11-09T12:30:28.978Z",
+      "updatedAt": "2026-11-09T12:30:28.978Z"
+    },
+    {
+      "_id": 1005,
+      "orderNumber": "FE-1005",
+      "userId": 3,
+      "restaurantId": 7,
+      "restaurantName": "Burger Barn",
+      "restaurantEmoji": "🍔",
+      "restaurantTheme": "caramel",
+      "items": [
+        {
+          "itemId": 58,
+          "name": "Paneer Tikka Bowl",
+          "price": 299,
+          "qty": 1,
+          "isVeg": true,
+          "lineTotal": 299
+        },
+        {
+          "itemId": 61,
+          "name": "Berry Blast Smoothie",
+          "price": 199,
+          "qty": 1,
+          "isVeg": true,
+          "lineTotal": 199
+        }
+      ],
+      "address": "Flat 501, Lake View, Kalyani Nagar, Pune",
+      "phone": "9820011223",
+      "paymentMethod": "Cash on Delivery",
+      "subtotal": 498,
+      "gst": 25,
+      "deliveryFee": 29,
+      "total": 552,
+      "status": "Cancelled",
+      "statusHistory": [
+        {
+          "status": "Placed",
+          "at": "2026-11-08T10:30:28.978Z"
+        },
+        {
+          "status": "Cancelled",
+          "at": "2026-11-10T15:25:28.978Z"
+        }
+      ],
+      "createdAt": "2026-11-08T10:30:28.978Z",
+      "updatedAt": "2026-11-08T10:30:28.978Z"
+    }
+  ]
+}

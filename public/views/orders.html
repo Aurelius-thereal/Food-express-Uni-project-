@@ -1,0 +1,126 @@
+<div class="shell">
+  <div class="orders-toolbar">
+    <div>
+      <h1 class="page-title">My orders</h1>
+      <p class="page-sub">Live status updates every 15 seconds while your food is on the way.</p>
+    </div>
+    <div style="display: flex; align-items: center; gap: 10px">
+      <div class="tabs">
+        <button type="button" class="tab" ng-class="{ 'tab--active': vm.filter === 'active' }"
+                ng-click="vm.filter = 'active'">In progress</button>
+        <button type="button" class="tab" ng-class="{ 'tab--active': vm.filter === 'past' }"
+                ng-click="vm.filter = 'past'">Past orders</button>
+        <button type="button" class="tab" ng-class="{ 'tab--active': vm.filter === 'all' }"
+                ng-click="vm.filter = 'all'">All</button>
+      </div>
+      <button type="button" class="btn btn--outline btn--sm" ng-click="vm.refresh()">↻ Refresh</button>
+    </div>
+  </div>
+
+  <div class="alert alert--error" ng-if="vm.error">
+    <span class="alert__icon">!</span><span>{{ vm.error }}</span>
+  </div>
+
+  <div class="loading-row" ng-if="vm.loading">
+    <span class="spinner"></span> Loading your orders…
+  </div>
+
+  <div class="empty" ng-if="!vm.loading && !vm.visible().length">
+    <div class="empty__emoji">{{ vm.orders.length ? '🍽️' : '📦' }}</div>
+    <p class="empty__title">{{ vm.orders.length ? 'Nothing in this tab' : 'No orders yet' }}</p>
+    <p class="empty__text">
+      {{ vm.orders.length
+          ? 'Switch to another tab to see the rest of your order history.'
+          : 'When you place your first order it will appear here with a live delivery tracker.' }}
+    </p>
+    <a class="btn btn--primary" href="#/">Browse restaurants</a>
+  </div>
+
+  <article class="ocard" ng-repeat="order in vm.visible() track by order._id">
+    <div class="ocard__head">
+      <div class="ocard__rest">
+        <span class="ocard__emoji cover--{{ order.restaurantTheme }}">{{ order.restaurantEmoji }}</span>
+        <div>
+          <p class="ocard__name">{{ order.restaurantName }}</p>
+          <p class="ocard__meta">
+            <span class="ocard__id">{{ order.orderNumber }}</span> ·
+            {{ order.createdAt | timeAgo }} ·
+            {{ order.items.length }} item{{ order.items.length === 1 ? '' : 's' }}
+          </p>
+        </div>
+      </div>
+      <div style="text-align: right">
+        <span class="badge" ng-class="vm.status.badgeClass(order.status)">
+          {{ vm.status.icon(order.status) }} {{ order.status }}
+        </span>
+        <p class="ocard__total" style="margin-top: 6px">{{ order.total | money }}</p>
+      </div>
+    </div>
+
+    <div class="track" ng-if="order.status !== 'Cancelled'">
+      <div class="track__step" ng-repeat="step in vm.flow"
+           ng-class="{ 'track__step--done': $index <= vm.stepIndex(order), 'track__step--current': $index === vm.stepIndex(order) }">
+        <span class="track__dot"></span>
+        {{ step }}
+      </div>
+    </div>
+
+    <div class="order-cancelled" ng-if="order.status === 'Cancelled'">
+      <span>✖</span>
+      <span>This order was cancelled. Any payment will be refunded to the original method.</span>
+    </div>
+
+    <div class="ocard__body" ng-if="order.expanded">
+      <div class="ocard__items">
+        <div class="ocard__item" ng-repeat="item in order.items">
+          <span>
+            <span class="veg-mark" ng-class="{ 'veg-mark--nonveg': !item.isVeg }"></span>
+            {{ item.name }} × {{ item.qty }}
+          </span>
+          <span>{{ item.lineTotal | money }}</span>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="summary__row">
+        <span>Item total</span><span>{{ order.subtotal | money }}</span>
+      </div>
+      <div class="summary__row">
+        <span>GST (5%)</span><span>{{ order.gst | money }}</span>
+      </div>
+      <div class="summary__row">
+        <span>Delivery fee</span><span>{{ order.deliveryFee === 0 ? 'Free' : (order.deliveryFee | money) }}</span>
+      </div>
+      <div class="summary__row summary__row--total">
+        <span>Total paid</span><span>{{ order.total | money }}</span>
+      </div>
+
+      <hr class="divider">
+
+      <div class="kv"><span>Delivering to</span><span>{{ order.address }}</span></div>
+      <div class="kv"><span>Phone</span><span>{{ order.phone }}</span></div>
+      <div class="kv"><span>Payment method</span><span>{{ order.paymentMethod }}</span></div>
+      <div class="kv" ng-if="order.statusHistory.length">
+        <span>Last update</span>
+        <span>{{ order.statusHistory[order.statusHistory.length - 1].status }} at
+          {{ order.statusHistory[order.statusHistory.length - 1].at | clockTime }}</span>
+      </div>
+    </div>
+
+    <div class="ocard__foot">
+      <div class="ocard__total">
+        <small>Paid via {{ order.paymentMethod }}</small>
+        {{ order.total | money }}
+      </div>
+      <div class="ocard__actions">
+        <button type="button" class="btn btn--ghost btn--sm" ng-click="vm.toggle(order)">
+          {{ order.expanded ? 'Hide details' : 'View details' }}
+        </button>
+        <a class="btn btn--ghost btn--sm" href="#/restaurant/{{ order.restaurantId }}">Order again</a>
+        <button type="button" class="btn btn--outline btn--sm" ng-if="vm.isCancellable(order)"
+                ng-click="vm.cancel(order)">Cancel order</button>
+      </div>
+    </div>
+  </article>
+</div>
